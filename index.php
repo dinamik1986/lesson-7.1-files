@@ -19,17 +19,20 @@ $news='Четыре новосибирские компании вошли в с
 Звезды телешоу «Голос» Наргиз Закирова и Гела Гуралиа споют в «Маяковском»';
 $news=  explode("\n", $news);
 
-//print_r($_POST);
+
 
 function vivod($news) {
 
 
-    $id = isset($_POST['id']) ? strtolower($_POST['id']): 'azaza_error)';
+   $id = isset($_POST['id']) ? strtolower($_POST['id']): 'azaza_error)';
+
+
+
 
 
     if (is_numeric($id)) {
 
-        if ($id >= 0 && $id <= 8) {
+        if ($id >= 0 && $id <= count($news)-1) {
             echo $news[$id];
         } else {
             vivod_all($news);
@@ -38,7 +41,7 @@ function vivod($news) {
     } else {
      header("HTTP/1.1 404 Not Found");    
      header("Status: 404 Not Found");
-     echo "Ошибка 404";
+     echo "Ошибка 404, введите корректный ID";
     }
 }
 
