@@ -270,10 +270,16 @@ function show_form($id=false){
 //print_r($_POST);
 
 if(isset($_POST['main_form_submit']) && $_POST['main_form_submit']=="Отправить")
+
 {
-    
-    $_SESSION['ads'][]=$_POST;
-    
+    foreach ($_POST as $id=>$val)
+    {
+        if(empty($val)) 
+        {
+                exit ('Введите значение '.$id.' в форму!!!');
+        }
+    }
+$_SESSION['ads'][]=$_POST;
 }
 
 
