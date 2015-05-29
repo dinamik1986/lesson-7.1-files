@@ -30,19 +30,30 @@ if(isset($_GET['action'])){
 }
 
 
-function getFullList(){
+
+
+
+function getFullList()
+{
     
-    if(count($_SESSION['ads'])){
+    if(count($_SESSION['ads']))
+    {
         $ads = $_SESSION['ads'];
-        foreach($ads as $key=>$val){
+        foreach($ads as $key=>$val)
+        {
             echo "<a href='?action=edit&id=$key'>".$val['title']."</a> - <a href='?action=delete&id=$key'>удалить</a><br>";
         }
         
-    }else{
+    }
+    
+    else
+    {
         echo "Объявлений нет";
     }
     
 }
+
+
 
 function show_form($id=false){
     // вытащить объявление из базы (массив сессии)
@@ -57,16 +68,71 @@ function show_form($id=false){
     $gorod = ''; 
     $stanciya = '';
     $metka = '';
+    $ad['private1'] = 'checked';
+    $ad['private2'] = '';
+    $ad['allow_mails'] = '';
     
-    var_dump($id);
     
-    if(isset($id) && is_numeric($id)) {
+    if (!empty($_POST))
+    {
+        $ad['seller_name']=$_POST['seller_name'];
+        $ad['email']=$_POST['email'];
+        $ad['price']=$_POST['price'];
+        $ad['phone'] =$_POST['phone'];
+        $ad['title'] =$_POST['title'];
+        $ad['description'] =$_POST['description'];
+        $gorod = $_POST['location_id'];
+        $stanciya = $_POST['metro_id'];
+        $metka = $_POST['category_id'];
+        
+        
+        if ($_POST['private']=='1')
+        {
+            $ad['private1'] = 'checked';
+            $ad['private2'] = '';
+        }
+        else
+        {
+         $ad['private1'] = '';
+         $ad['private2'] = 'checked';
+        }
+        
+    }
+    
+    
+    
+
+    if(isset($id) && is_numeric($id)) 
+    {
         $ad = $_SESSION['ads'][$id];
         $ad['main_form_submit']='Сохранить';
         $gorod = $_SESSION['ads'][$id]['location_id'];
         $stanciya = $_SESSION['ads'][$id]['metro_id'];
         $metka = $_SESSION['ads'][$id]['category_id'];
-    }
+        
+        if ($_SESSION['ads'][$id]['private']=='1')
+        {
+            $ad['private1'] = 'checked';
+            $ad['private2'] = '';
+        }
+        else
+        {
+         $ad['private1'] = '';
+         $ad['private2'] = 'checked';
+        }
+    
+    if (isset($_SESSION['ads'][$id]['allow_mails']))
+        {
+            $ad['allow_mails'] = 'checked';
+        }
+        
+        else
+        {
+              $ad['allow_mails'] = '';
+        }
+    
+    
+       }
     
         $citys = array(
     '641780'=>'Новосибирск',
@@ -123,9 +189,9 @@ function show_form($id=false){
     
     <div class="form-row-indented"> 
         <label class="form-label-radio">
-            <input type="radio" checked="" value="1" name="private">Частное лицо</label> 
+            <input type="radio" <?=$ad['private1']?> value="1" name="private">Частное лицо</label> 
         <label class="form-label-radio">
-            <input type="radio" value="0" name="private">Компания</label> 
+            <input type="radio" <?=$ad['private2']?>  value="2" name="private">Компания</label> 
     </div>
     <br>
     <div class="form-row"> 
@@ -142,7 +208,7 @@ function show_form($id=false){
     <br>
     <div class="form-row-indented"> 
         <label class="form-label-checkbox" for="allow_mails"> 
-            <input type="checkbox" value="1" name="allow_mails" id="allow_mails" class="form-input-checkbox">
+            <input type="checkbox" value="1" <?=$ad['allow_mails']?> name="allow_mails" id="allow_mails" class="form-input-checkbox">
             <span class="form-text-checkbox">Я не хочу получать вопросы по объявлению по e-mail</span> 
         </label> 
     </div>
@@ -264,26 +330,50 @@ function show_form($id=false){
 <?php
 }
 
-
-
-//print_r($_SESSION);
-//print_r($_POST);
-
 if(isset($_POST['main_form_submit']) && $_POST['main_form_submit']=="Отправить")
 
 {
     foreach ($_POST as $id=>$val)
     {
-        if(empty($val)) 
+        if(empty($val) && $val != 'allow_mails') 
         {
                 exit ('Введите значение '.$id.' в форму!!!');
+                
         }
+        
+        
     }
+    
+    
 $_SESSION['ads'][]=$_POST;
+
+
 }
 
 
+if(isset($_POST['main_form_submit']) && $_POST['main_form_submit']=="Сохранить")
 
+{
+    foreach ($_POST as $par=>$val)
+    {
+        if(empty($val) && $val != 'allow_mails') 
+        {
+                exit ('Введите значение '.$par.' в форму!!!');
+                
+        }
+    }
+    
+$id_red = $_GET['id'];
+$_SESSION['ads'][$id_red]=$_POST;
+}
+
+
+if (!empty($_SESSION))
 getFullList();
 
+
+
 ?>
+
+
+
