@@ -214,7 +214,7 @@ function show_form($id=false){
     </div>
     <br>
     <div class="form-row"> 
-        <label id="fld_phone_label" for="fld_phone" class="form-label">Номер телефона</label> 
+        <label id="fld_phone_label" for="fld_phone" class="form-label">Номер телефона +7</label> 
         <input type="text" class="form-input-text" value="<?=$ad['phone']?>" name="phone" id="fld_phone">
     </div>
     <br>
@@ -333,7 +333,7 @@ function show_form($id=false){
 if(isset($_POST['main_form_submit']) && $_POST['main_form_submit']=="Отправить")
 
 {
-    foreach ($_POST as $id=>$val)
+        foreach ($_POST as $id=>$val)
     {
         if(empty($val) && $val != 'allow_mails') 
         {
@@ -344,9 +344,22 @@ if(isset($_POST['main_form_submit']) && $_POST['main_form_submit']=="Отпра�
         
     }
     
+    if (preg_match('/\D+/', $_POST['price']) == 1) 
+    {
+        exit ('Цена должна быть числом!');
+    }
+    
+     if (preg_match('/\D+/', $_POST['phone']) == 1) 
+    {
+        exit ('Введите корректный номер телефона!');
+    }
+    
+     if (! preg_match( '/^[-0-9a-z_\.]+@[-0-9a-z^\.]+\.[a-z]{2,4}$/i', $_POST['email'])) 
+    {
+        exit ('Введите корректный email!!');
+    }
     
 $_SESSION['ads'][]=$_POST;
-
 
 }
 
@@ -361,6 +374,21 @@ if(isset($_POST['main_form_submit']) && $_POST['main_form_submit']=="Сохра�
                 exit ('Введите значение '.$par.' в форму!!!');
                 
         }
+    }
+    
+     if (preg_match('/\D+/', $_POST['price']) == 1) 
+    {
+        exit ('Цена должна быть числом!');
+    }
+    
+     if (preg_match('/\D+/', $_POST['phone']) == 1) 
+    {
+        exit ('Введите корректный номер телефона!');
+    }
+    
+    if (! preg_match( '/^[-0-9a-z_\.]+@[-0-9a-z^\.]+\.[a-z]{2,4}$/i', $_POST['email'])) 
+    {
+        exit ('Введите корректный email!!');
     }
     
 $id_red = $_GET['id'];
