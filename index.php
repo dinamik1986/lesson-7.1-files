@@ -3,10 +3,6 @@ header('Content-type: text/html; charset=utf-8');
 error_reporting(E_ERROR|E_WARNING|E_PARSE|E_NOTICE);
 ini_set('display_errors', 1);
 
-session_start();
-
-
-
 if(isset($_POST['main_form_submit']) && $_POST['main_form_submit']=="Отправить"){
         foreach ($_POST as $id=>$val){
             if(empty($val) && $val != 'allow_mails'){
